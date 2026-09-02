@@ -1,0 +1,13 @@
+{
+  "name": "vietcombank-tygia",
+  "version": "1.0.0",
+  "description": "Job Node.js lấy tỉ giá USD ngày hiện tại từ Vietcombank",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "start": "node src/job.js",
+    "job": "node src/job.js"
+  }
+}
