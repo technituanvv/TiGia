@@ -30,3 +30,7 @@ schtasks /Create /TN "VCB-USD-Rate" /SC DAILY /ST 09:00 /TR "node C:\Users\Admin
 
 Tỉ giá VCB:
 https://www.vietcombank.com.vn/api/exchangerates?date=YYYY-MM-DD
+
+
+Tỉ giá ghi vào bảng Tỉ giá (tTiGia) theo ngày, nếu chạy lại chỉ Update.
+Giá vàng thế giới + quy đổi sang VNĐ và các hãng trong nước (DOJI) -> Tỉ lệ chênh lệch được ghi trong bảng tGiaVang.

@@ -9,5 +9,8 @@
   "scripts": {
     "start": "node src/job.js",
     "job": "node src/job.js"
+  },
+  "dependencies": {
+    "pg": "^8.16.3"
   }
 }
