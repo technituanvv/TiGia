@@ -25,3 +25,8 @@ schtasks /Create /TN "VCB-USD-Rate" /SC DAILY /ST 09:00 /TR "node C:\Users\Admin
 ## Nguồn dữ liệu
 
 `https://www.vietcombank.com.vn/api/exchangerates?date=YYYY-MM-DD`
+
+
+
+Tỉ giá VCB:
+https://www.vietcombank.com.vn/api/exchangerates?date=YYYY-MM-DD
