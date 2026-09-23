@@ -1,3 +1,10 @@
+******Description*******
+Tỉ giá ghi vào bảng Tỉ giá (tTiGia) theo ngày, nếu chạy lại chỉ Update.
+Giá vàng thế giới + quy đổi sang VNĐ và các hãng trong nước (DOJI) -> Tỉ lệ chênh lệch được ghi trong bảng tGiaVang.
+
+
+
+
 # vietcombank-tygia
 
 Job Node.js lấy tỉ giá **USD** ngày hiện tại (múi giờ `Asia/Ho_Chi_Minh`) từ API công khai của Vietcombank.
@@ -32,5 +39,4 @@ Tỉ giá VCB:
 https://www.vietcombank.com.vn/api/exchangerates?date=YYYY-MM-DD
 
 
-Tỉ giá ghi vào bảng Tỉ giá (tTiGia) theo ngày, nếu chạy lại chỉ Update.
-Giá vàng thế giới + quy đổi sang VNĐ và các hãng trong nước (DOJI) -> Tỉ lệ chênh lệch được ghi trong bảng tGiaVang.
+

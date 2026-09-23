@@ -162,6 +162,9 @@ function buildGoldPrice(spot, usdSell, dealers, date) {
   const priceUsdPerLuong = priceUsdPerGram * GRAMS_PER_LUONG;
   const priceVndPerLuong = priceUsdPerLuong * usdSell;
 
+  const diffDojiSellAbs = dealers.doji.sell != null ? Math.round(dealers.doji.sell - priceVndPerLuong) : null;
+  const diffDojiSellPct = dealers.doji.sell != null ? round((diffDojiSellAbs / priceVndPerLuong) * 100, 2) : null;
+
   return {
     date: `${date}T00:00:00`,
     metal: "XAU",
@@ -184,6 +187,8 @@ function buildGoldPrice(spot, usdSell, dealers, date) {
     pnjName: dealers.pnj.name,
     pnjBuy: dealers.pnj.buy,
     pnjSell: dealers.pnj.sell,
+    diffDojiSellAbs,
+    diffDojiSellPct,
     dealersUpdatedAt: dealers.date && dealers.time ? `${dealers.date} ${dealers.time}` : dealers.date,
     updatedAt: spot.updatedAt,
     fetchedAt: new Date().toISOString(),
@@ -234,6 +239,8 @@ async function ensureTables() {
       "pnjName" TEXT,
       "pnjBuy" NUMERIC,
       "pnjSell" NUMERIC,
+      "diffDojiSellAbs" NUMERIC,
+      "diffDojiSellPct" NUMERIC,
       "dealersUpdatedAt" TEXT,
       "dealersSource" TEXT,
       "updatedAt" TEXT,
@@ -252,6 +259,8 @@ async function ensureTables() {
     ["pnjName", "TEXT"],
     ["pnjBuy", "NUMERIC"],
     ["pnjSell", "NUMERIC"],
+    ["diffDojiSellAbs", "NUMERIC"],
+    ["diffDojiSellPct", "NUMERIC"],
     ["dealersUpdatedAt", "TEXT"],
     ["dealersSource", "TEXT"],
   ];
@@ -346,6 +355,8 @@ async function upsertGold(result, businessDate) {
     result.pnjName,
     result.pnjBuy,
     result.pnjSell,
+    result.diffDojiSellAbs,
+    result.diffDojiSellPct,
     result.dealersUpdatedAt,
     result.dealersSource,
     result.updatedAt,
@@ -381,12 +392,14 @@ async function upsertGold(result, businessDate) {
        "pnjName" = $19,
        "pnjBuy" = $20,
        "pnjSell" = $21,
-       "dealersUpdatedAt" = $22,
-       "dealersSource" = $23,
-       "updatedAt" = $24,
-       "fetchedAt" = $25,
-       source = $26
-     WHERE id = $27`,
+       "diffDojiSellAbs" = $22,
+       "diffDojiSellPct" = $23,
+       "dealersUpdatedAt" = $24,
+       "dealersSource" = $25,
+       "updatedAt" = $26,
+       "fetchedAt" = $27,
+       source = $28
+     WHERE id = $29`,
     `INSERT INTO "tGiaVang" (
        date, metal, unit, "gramsPerTroyOunce", "gramsPerLuong",
        "priceUsdOz", "bidUsdOz", "askUsdOz", "usdSellVcb",
@@ -394,12 +407,13 @@ async function upsertGold(result, businessDate) {
        "sjcName", "sjcBuy", "sjcSell",
        "dojiName", "dojiBuy", "dojiSell",
        "pnjName", "pnjBuy", "pnjSell",
+       "diffDojiSellAbs", "diffDojiSellPct",
        "dealersUpdatedAt", "dealersSource",
        "updatedAt", "fetchedAt", source
      )
      VALUES (
        $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12,
-       $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26
+       $13, $14, $15, $16, $17, $18, $19, $20, $21, $22, $23, $24, $25, $26, $27, $28
      )
      RETURNING id`
   );
@@ -442,6 +456,11 @@ async function main() {
   console.log(
     `[${date}] SJC mua ${gold.sjcBuy?.toLocaleString("vi-VN")} / bán ${gold.sjcSell?.toLocaleString("vi-VN")} | DOJI mua ${gold.dojiBuy?.toLocaleString("vi-VN")} / bán ${gold.dojiSell?.toLocaleString("vi-VN")} | PNJ mua ${gold.pnjBuy?.toLocaleString("vi-VN")} / bán ${gold.pnjSell?.toLocaleString("vi-VN")}`
   );
+  if (gold.diffDojiSellAbs != null) {
+    console.log(
+      `[${date}] Chênh lệch DOJI bán ra so với thế giới: ${gold.diffDojiSellAbs.toLocaleString("vi-VN")} VND/lượng (${gold.diffDojiSellPct}%)`
+    );
+  }
   console.log(`Đã lưu file: ${goldFile}`);
   logUpsert("tGiaVang", date, goldUpsert.id, goldUpsert.action);
 
